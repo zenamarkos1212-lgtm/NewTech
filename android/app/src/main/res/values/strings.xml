@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">New Tech TV Recovery</string>
+    <string name="title_activity_main">New Tech TV Recovery</string>
+    <string name="package_name">com.newtech.tvrecovery</string>
+    <string name="custom_url_scheme">com.newtech.tvrecovery</string>
+</resources>
