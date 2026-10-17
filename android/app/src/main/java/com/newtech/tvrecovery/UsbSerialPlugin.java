@@ -222,7 +222,7 @@ public class UsbSerialPlugin extends Plugin {
             );
 
             executor = Executors.newSingleThreadExecutor();
-            executor.submit(ioManager);
+            ioManager.start();
 
             JSObject result = new JSObject();
             result.put("connected", true);
