@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Top arc path for Amharic text: ኒው-ቴክ ኢንስቲትዩት -->
+    <path id="top-arc" d="M 70 256 A 186 186 0 0 1 442 256" fill="none" />
+    <!-- Bottom arc path for Amharic text: የኤሌክትሮኒክስ ጥገና ማዕከል -->
+    <path id="bottom-arc" d="M 442 256 A 186 186 0 0 1 70 256" fill="none" />
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#facc15" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="252" fill="#050608" stroke="#facc15" stroke-width="6" />
+  <circle cx="256" cy="256" r="236" fill="none" stroke="#facc15" stroke-width="2.5" stroke-dasharray="8 4" opacity="0.6" />
+  <circle cx="256" cy="256" r="148" fill="none" stroke="#facc15" stroke-width="3" />
+
+  <!-- Upper Amharic Arch Text: ኒው-ቴክ ኢንስቲትዩት -->
+  <text fill="#facc15" font-family="'Noto Sans Ethiopic', 'Abyssinica SIL', 'Nyala', 'sans-serif'" font-weight="900" font-size="34" letter-spacing="3">
+    <textPath href="#top-arc" startOffset="50%" text-anchor="middle">
+      ኒው-ቴክ ኢንስቲትዩት
+    </textPath>
+  </text>
+
+  <!-- Lower Amharic Arch Text: የኤሌክትሮኒክስ ጥገና ማዕከል -->
+  <text fill="#facc15" font-family="'Noto Sans Ethiopic', 'Abyssinica SIL', 'Nyala', 'sans-serif'" font-weight="900" font-size="28" letter-spacing="2">
+    <textPath href="#bottom-arc" startOffset="50%" text-anchor="middle">
+      የኤሌክትሮኒክስ ጥገና ማዕከል
+    </textPath>
+  </text>
+
+  <!-- Central TN Emblem with Screwdriver Core -->
+  <g id="center-emblem" transform="translate(256, 256) scale(1.1) translate(-256, -256)" filter="url(#glow)">
+    <!-- T top bar -->
+    <path d="M 180 162 L 332 162 L 320 188 L 192 188 Z" fill="#facc15" />
+    
+    <!-- Stylized N left vertical upright -->
+    <path d="M 180 196 L 216 196 L 216 312 L 180 326 Z" fill="#facc15" />
+    
+    <!-- Stylized N right vertical upright -->
+    <path d="M 296 196 L 332 196 L 332 326 L 296 312 Z" fill="#facc15" />
+
+    <!-- Stylized N diagonal angled cuts -->
+    <polygon points="216,204 246,260 226,275 216,252" fill="#facc15" />
+    <polygon points="296,306 266,250 286,235 296,258" fill="#facc15" />
+
+    <!-- Center Screwdriver (T-stem and technician icon) -->
+    <!-- Handle -->
+    <path d="M 244 186 C 244 182, 268 182, 268 186 L 271 230 C 271 236, 241 236, 241 230 Z" fill="#facc15" stroke="#050608" stroke-width="2" />
+    <!-- Handle grip grooves -->
+    <line x1="247" y1="192" x2="247" y2="224" stroke="#050608" stroke-width="2" stroke-linecap="round" />
+    <line x1="256" y1="190" x2="256" y2="226" stroke="#050608" stroke-width="2.5" stroke-linecap="round" />
+    <line x1="265" y1="192" x2="265" y2="224" stroke="#050608" stroke-width="2" stroke-linecap="round" />
+    
+    <!-- Collar & Shaft -->
+    <rect x="250" y="234" width="12" height="6" fill="#facc15" />
+    <rect x="252" y="240" width="8" height="52" fill="#facc15" stroke="#050608" stroke-width="1.5" />
+    
+    <!-- Screwdriver tip (flat/slotted precision blade) -->
+    <polygon points="252,292 260,292 258,328 254,328" fill="#facc15" stroke="#050608" stroke-width="1" />
+  </g>
+</svg>

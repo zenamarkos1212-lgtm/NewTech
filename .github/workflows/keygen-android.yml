@@ -1,0 +1,52 @@
+name: New Tech Keygen APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'keygen-app/**'
+      - '.github/workflows/keygen-android.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: keygen-app
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Build Web
+        run: npm run build
+
+      - name: Capacitor Sync
+        run: npx cap sync android
+
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload Keygen APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: New-Tech-Keygen-Studio
+          path: keygen-app/android/app/build/outputs/apk/debug/app-debug.apk

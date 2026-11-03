@@ -1,0 +1,6 @@
+{
+  "name": "New-Tech TV Recovery Tool",
+  "description": "Smart TV Recovery, Universal TV Remote & UART Console Tool. Developed by Tesfaye Hailu Gellaw for New-Tech Institute.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
