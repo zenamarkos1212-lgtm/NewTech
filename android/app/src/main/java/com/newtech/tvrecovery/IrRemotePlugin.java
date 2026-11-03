@@ -69,7 +69,7 @@ public class IrRemotePlugin extends Plugin {
 
         try {
             for (int i = 0; i < patternArray.length(); i++) {
-                Integer duration = patternArray.getInteger(i);
+                Integer duration = patternArray.getInt(i);
 
                 if (duration == null || duration <= 0 || duration > 100000) {
                     call.reject("Invalid IR timing at position " + i);
