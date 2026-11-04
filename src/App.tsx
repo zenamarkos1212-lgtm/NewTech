@@ -12,6 +12,7 @@ import { ConsoleTabs } from './components/ConsoleTabs';
 import { ChipsetSelector } from './components/ChipsetSelector';
 import { ActionGrid } from './components/ActionGrid';
 import { TerminalView } from './components/TerminalView';
+import { BootloopRecoveryModal } from './components/BootloopRecoveryModal';
 import { ConnectionModal } from './components/ConnectionModal';
 import { HardwareGuideModal } from './components/HardwareGuideModal';
 import { TVRemoteModal } from './components/TVRemoteModal';
@@ -52,6 +53,7 @@ export default function App() {
   const [isConnModalOpen, setIsConnModalOpen] = useState(false);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const [isRemoteModalOpen, setIsRemoteModalOpen] = useState(false);
+  const [isBootloopOpen, setIsBootloopOpen] = useState(false);
 
   // 5 Separate Console buffers (CONSOLE 1 to 5)
   const [consolesData, setConsolesData] = useState<Record<number, ConsoleMessage[]>>({
@@ -324,6 +326,23 @@ export default function App() {
             </button>
           </div>
 
+
+          {/* NEW TECH BOOTLOOP RECOVERY */}
+          <button
+            onClick={() => setIsBootloopOpen(true)}
+            className="w-full rounded-xl border-2 border-cyan-500/50 bg-gradient-to-r from-cyan-950/70 to-slate-900 p-4 flex items-center justify-between hover:border-cyan-400 active:scale-[0.99] transition"
+          >
+            <div className="text-left">
+              <div className="text-sm font-black tracking-wider text-cyan-300">
+                BOOTLOOP RECOVERY
+              </div>
+              <div className="text-[10px] text-slate-400 mt-1">
+                USB AUTO DETECT • CHIPSET ANALYSIS • UART BOOT LOG
+              </div>
+            </div>
+            <span className="text-cyan-300 text-2xl">⌁</span>
+          </button>
+
           {/* Recovery Actions Grid */}
           <ActionGrid
             currentChipset={activeChipset}
@@ -373,6 +392,25 @@ export default function App() {
           </div>
         </div>
       </main>
+
+
+      <BootloopRecoveryModal
+        isOpen={isBootloopOpen}
+        onClose={() => setIsBootloopOpen(false)}
+        onConnectOtg={handleConnectOtg}
+        onSendCommand={handleSendCommand}
+        onScanDevices={() => serialService.listDevices()}
+        onSetBaudRate={(rate) => serialService.setBaudRate(rate)}
+        onSendBreak={(duration) => serialService.sendBreak(duration)}
+        isConnected={connectionType === 'otg' && isConnected}
+        bootLog={Object.values(consolesData)
+          .flat()
+          .filter(message => message.type === 'rx')
+          .slice(-100)
+          .map(message => message.text)
+          .join('\n')}
+        lang={lang}
+      />
 
       {/* Connection Modal (OTG & Wireless configuration) */}
       <ConnectionModal

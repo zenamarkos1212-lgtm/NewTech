@@ -159,6 +159,16 @@ export const ActivationScreen: React.FC<ActivationScreenProps> = ({
           </button>
         </form>
 
+        
+        {/* Private Developer Keygen Entry */}
+        <a
+          href="?keygen"
+          className="w-full py-2.5 rounded-xl border border-amber-500/50 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-bold flex items-center justify-center gap-2 transition"
+        >
+          <KeyRound className="w-4 h-4" />
+          <span>የገንቢ Keygen Studio</span>
+        </a>
+
         {/* Contact Developer Links */}
         <div className="pt-2 w-full border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400 font-mono">
           <span>ገንቢ፦ ተስፋዬ ሀይሉ ገላው</span>

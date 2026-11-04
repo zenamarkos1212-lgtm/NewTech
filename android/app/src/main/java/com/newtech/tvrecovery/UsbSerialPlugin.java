@@ -13,6 +13,7 @@ import android.os.Build;
 import androidx.core.content.ContextCompat;
 
 import com.getcapacitor.JSObject;
+import com.getcapacitor.JSArray;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
@@ -281,6 +282,128 @@ public class UsbSerialPlugin extends Plugin {
         } catch (Exception e) {
             call.reject("Could not change DTR/RTS signals: " +
                     e.getMessage(), e);
+        }
+    }
+
+
+    @PluginMethod
+    public void listDevices(PluginCall call) {
+        try {
+            UsbManager manager = (UsbManager) getContext()
+                    .getSystemService(Context.USB_SERVICE);
+
+            if (manager == null) {
+                call.reject("USB service unavailable.");
+                return;
+            }
+
+            List<UsbSerialDriver> drivers =
+                    UsbSerialProber.getDefaultProber()
+                            .findAllDrivers(manager);
+
+            JSArray devices = new JSArray();
+
+            for (UsbDevice device : manager.getDeviceList().values()) {
+                JSObject item = new JSObject();
+
+                item.put("deviceId", device.getDeviceId());
+                item.put("vendorId", device.getVendorId());
+                item.put("productId", device.getProductId());
+                item.put("deviceName", device.getDeviceName());
+                item.put("manufacturer",
+                        device.getManufacturerName() == null
+                                ? "" : device.getManufacturerName());
+                item.put("product",
+                        device.getProductName() == null
+                                ? "" : device.getProductName());
+                item.put("hasPermission", manager.hasPermission(device));
+
+                String driverName = "Unsupported";
+                int portCount = 0;
+
+                for (UsbSerialDriver driver : drivers) {
+                    if (driver.getDevice().getDeviceId()
+                            == device.getDeviceId()) {
+                        driverName = driver.getClass().getSimpleName();
+                        portCount = driver.getPorts().size();
+                        break;
+                    }
+                }
+
+                item.put("driver", driverName);
+                item.put("portCount", portCount);
+                devices.put(item);
+            }
+
+            JSObject result = new JSObject();
+            result.put("devices", devices);
+            result.put("count", devices.length());
+
+            call.resolve(result);
+
+        } catch (Exception e) {
+            call.reject("USB scan failed: " + e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void setBaudRate(PluginCall call) {
+        if (serialPort == null) {
+            call.reject("USB serial port is not connected.");
+            return;
+        }
+
+        int baudRate = call.getInt("baudRate", 115200);
+
+        if (baudRate < 300 || baudRate > 1000000) {
+            call.reject("Invalid baud rate.");
+            return;
+        }
+
+        try {
+            serialPort.setParameters(
+                    baudRate,
+                    8,
+                    UsbSerialPort.STOPBITS_1,
+                    UsbSerialPort.PARITY_NONE
+            );
+
+            JSObject result = new JSObject();
+            result.put("success", true);
+            result.put("baudRate", baudRate);
+            call.resolve(result);
+
+        } catch (Exception e) {
+            call.reject("Baud rate change failed: " + e.getMessage(), e);
+        }
+    }
+
+    @PluginMethod
+    public void sendBreak(PluginCall call) {
+        if (serialPort == null) {
+            call.reject("USB serial port is not connected.");
+            return;
+        }
+
+        int duration = call.getInt("durationMs", 150);
+        duration = Math.max(50, Math.min(duration, 500));
+
+        try {
+            serialPort.setBreak(true);
+
+            try {
+                Thread.sleep(duration);
+            } finally {
+                serialPort.setBreak(false);
+            }
+
+            JSObject result = new JSObject();
+            result.put("success", true);
+            result.put("durationMs", duration);
+            call.resolve(result);
+
+        } catch (Exception e) {
+            call.reject("UART BREAK failed: " + e.getMessage(), e);
         }
     }
 

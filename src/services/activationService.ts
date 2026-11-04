@@ -110,8 +110,11 @@ export function isAppActivated(): boolean {
     }
 
     // Check if key matches this device ID
-    const expected = generateKeyForDevice(devId);
-    return key.trim().toUpperCase() === expected.toUpperCase();
+    const expected = generateKeyForDevice(devId).toUpperCase();
+    const savedKey = key.trim().toUpperCase();
+    const alternateKey = expected.replace('ACT-', 'NT-');
+
+    return savedKey === expected || savedKey === alternateKey;
   } catch {
     return false;
   }

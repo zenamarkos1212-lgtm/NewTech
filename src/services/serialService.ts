@@ -15,6 +15,35 @@ interface UsbSerialPluginAPI {
 
   disconnect(): Promise<void>;
 
+  listDevices(): Promise<{
+    devices: Array<{
+      deviceId: number;
+      vendorId: number;
+      productId: number;
+      deviceName: string;
+      manufacturer: string;
+      product: string;
+      hasPermission: boolean;
+      driver: string;
+      portCount: number;
+    }>;
+    count: number;
+  }>;
+
+  setBaudRate(options: {
+    baudRate: number;
+  }): Promise<{
+    success: boolean;
+    baudRate: number;
+  }>;
+
+  sendBreak(options: {
+    durationMs?: number;
+  }): Promise<{
+    success: boolean;
+    durationMs: number;
+  }>;
+
   write(options: {
     data: string;
   }): Promise<void>;
@@ -254,6 +283,36 @@ export class SerialService {
 
       throw err;
     }
+  }
+
+  // Scan USB serial adapters. Native Android only.
+  public async listDevices() {
+    if (!Capacitor.isNativePlatform()) {
+      throw new Error('USB device scan requires the Android app.');
+    }
+
+    return NativeUsbSerial.listDevices();
+  }
+
+  // Change UART baud rate without disconnecting.
+  public async setBaudRate(baudRate: number): Promise<void> {
+    if (this.nativeConnected) {
+      await NativeUsbSerial.setBaudRate({ baudRate });
+      return;
+    }
+
+    throw new Error(
+      'Live baud-rate switching is currently supported by Android native USB only.'
+    );
+  }
+
+  // Send a short UART BREAK pulse.
+  public async sendBreak(durationMs = 150): Promise<void> {
+    if (!this.nativeConnected) {
+      throw new Error('Connect the Android USB serial adapter first.');
+    }
+
+    await NativeUsbSerial.sendBreak({ durationMs });
   }
 
   public async toggleSignals(
